@@ -12,19 +12,31 @@ let timeZoneDetails = document.getElementById('details2');
 let posts = document.getElementById('posts');
 
 async function fetchIP() {
-    const response = await fetch('https://api.ipify.org?format=json');
-    const data = await response.json()
-    document.getElementById('ip').innerHTML = data.ip;
-    fetchDetails(data);
+
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json()
+        document.getElementById('ip').innerHTML = data.ip;
+        fetchDetails(data);
+    }
+    catch (e) {
+        console.log(e);
+    }
+
 }
 
 fetchIP();
 
 async function fetchDetails(data) {
-    const response = await fetch(`https://ipinfo.io/${data.ip}?token=4f60a7a492abb0`);
-    const details = await response.json();
-    addDetails(details);
-    fetchDateAndTimeZone(details);
+    try {
+        const response = await fetch(`https://ipinfo.io/${data.ip}?token=4f60a7a492abb0`);
+        const details = await response.json();
+        addDetails(details);
+        fetchDateAndTimeZone(details);
+    }
+    catch (e) {
+        console.log(e);
+    }
 }
 
 
@@ -50,11 +62,16 @@ function addDetails(details) {
 let postOffices = [];
 async function fetchDateAndTimeZone(details) {
     let tzDatetime = new Date().toLocaleString("en-US", { timeZone: `${details.timezone}` });
-    const response = await fetch(`https://api.postalpincode.in/pincode/${details.postal}`);
-    const postalData = await response.json();
-    postOffices = [postalData[0].PostOffice];
-    addTimeZoneData(details, tzDatetime, postalData[0].Message);
-    addPostOfficesDetails(postalData[0].PostOffice);
+    try {
+        const response = await fetch(`https://api.postalpincode.in/pincode/${details.postal}`);
+        const postalData = await response.json();
+        postOffices = [postalData[0].PostOffice];
+        addTimeZoneData(details, tzDatetime, postalData[0].Message);
+        addPostOfficesDetails(postalData[0].PostOffice);
+    }
+    catch (e) {
+        console.log(e);
+    }
 }
 
 
